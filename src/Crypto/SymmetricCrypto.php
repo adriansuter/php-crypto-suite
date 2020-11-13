@@ -25,8 +25,7 @@ final class SymmetricCrypto extends AbstractCrypto
         HiddenString $plaintext,
         EncryptionKey $secretKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
-    ): string
-    {
+    ): string {
         return Crypto::encrypt($plaintext, $secretKey, $encoding);
     }
 
@@ -45,8 +44,7 @@ final class SymmetricCrypto extends AbstractCrypto
         EncryptionKey $secretKey,
         int $size,
         $encoding = Halite::ENCODE_BASE64URLSAFE
-    ): string
-    {
+    ): string {
         return self::encrypt(
             $this->hiddenStringUtilities->pad($plaintext, $size),
             $secretKey,
@@ -66,8 +64,7 @@ final class SymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         EncryptionKey $secretKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
-    ): HiddenString
-    {
+    ): HiddenString {
         return Crypto::decrypt($ciphertext, $secretKey, $encoding);
     }
 
@@ -83,8 +80,7 @@ final class SymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         EncryptionKey $secretKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
-    ): HiddenString
-    {
+    ): HiddenString {
         return $this->hiddenStringUtilities->trim(
             self::decrypt($ciphertext, $secretKey, $encoding)
         );
