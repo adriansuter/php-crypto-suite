@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AdrianSuter\CryptoSuite;
 
+use InvalidArgumentException;
 use ParagonIE\HiddenString\HiddenString;
 
 final class HiddenStringUtilities
