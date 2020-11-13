@@ -1,6 +1,7 @@
 {
   "name": "adriansuter/php-crypto-suite",
   "description": "The PHP Crypto Suite.",
+  "license": "MIT",
   "type": "library",
   "authors": [
     {
