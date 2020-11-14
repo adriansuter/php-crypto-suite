@@ -9,6 +9,8 @@ use ParagonIE\Halite\Asymmetric\Crypto;
 use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
 use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
 use ParagonIE\Halite\Asymmetric\PublicKey;
+use ParagonIE\Halite\Asymmetric\SecretKey;
+use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\Asymmetric\SignatureSecretKey;
 use ParagonIE\Halite\Halite;
 use ParagonIE\HiddenString\HiddenString;
@@ -52,7 +54,7 @@ final class AsymmetricCrypto extends AbstractCrypto
         int $size,
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
-        return self::encrypt(
+        return $this->encrypt(
             $this->hiddenStringUtilities->pad($plaintext, $size),
             $ourPrivateKey,
             $theirPublicKey,
@@ -67,6 +69,7 @@ final class AsymmetricCrypto extends AbstractCrypto
      * @param string             $encoding
      *
      * @return string
+     *
      * @throws HaliteAlert
      */
     public function signAndEncrypt(
@@ -76,6 +79,32 @@ final class AsymmetricCrypto extends AbstractCrypto
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
         return Crypto::signAndEncrypt($message, $secretKey, $recipientPublicKey, $encoding);
+    }
+
+    /**
+     * @param HiddenString       $message
+     * @param SignatureSecretKey $secretKey
+     * @param PublicKey          $recipientPublicKey
+     * @param int                $size
+     * @param string             $encoding
+     *
+     * @return string
+     *
+     * @throws HaliteAlert
+     */
+    public function signAndEncryptFixedSize(
+        HiddenString $message,
+        SignatureSecretKey $secretKey,
+        PublicKey $recipientPublicKey,
+        int $size,
+        $encoding = Halite::ENCODE_BASE64URLSAFE
+    ): string {
+        return $this->signAndEncrypt(
+            $this->hiddenStringUtilities->pad($message, $size),
+            $secretKey,
+            $recipientPublicKey,
+            $encoding
+        );
     }
 
     /**
@@ -114,7 +143,52 @@ final class AsymmetricCrypto extends AbstractCrypto
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
         return $this->hiddenStringUtilities->trim(
-            self::decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding)
+            $this->decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding)
+        );
+    }
+
+    /**
+     * @param string             $ciphertext
+     * @param SignaturePublicKey $senderPublicKey
+     * @param SecretKey          $givenSecretKey
+     * @param string             $encoding
+     *
+     * @return HiddenString
+     *
+     * @throws HaliteAlert
+     */
+    public function verifyAndDecrypt(
+        string $ciphertext,
+        SignaturePublicKey $senderPublicKey,
+        SecretKey $givenSecretKey,
+        $encoding = Halite::ENCODE_BASE64URLSAFE
+    ): HiddenString {
+        return Crypto::verifyAndDecrypt(
+            $ciphertext,
+            $senderPublicKey,
+            $givenSecretKey,
+            $encoding
+        );
+    }
+
+    /**
+     * @param string             $ciphertext
+     * @param SignaturePublicKey $senderPublicKey
+     * @param SecretKey          $givenSecretKey
+     * @param string             $encoding
+     *
+     * @return HiddenString
+     *
+     * @throws HaliteAlert
+     */
+    public function verifyAndDecryptFixedSize(
+        string $ciphertext,
+        SignaturePublicKey $senderPublicKey,
+        SecretKey $givenSecretKey,
+        $encoding = Halite::ENCODE_BASE64URLSAFE
+    ): HiddenString {
+        return $this->hiddenStringUtilities->trim(
+            $this->verifyAndDecrypt($ciphertext, $senderPublicKey, $givenSecretKey, $encoding)
         );
     }
 }
