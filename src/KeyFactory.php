@@ -120,6 +120,18 @@ final class KeyFactory
     }
 
     /**
+     * @param HiddenString $keyData
+     *
+     * @return SignatureKeyPair
+     *
+     * @throws InvalidKey
+     */
+    public function importSignatureKeyPair(HiddenString $keyData): SignatureKeyPair
+    {
+        return HaliteKeyFactory::importSignatureKeyPair($keyData);
+    }
+
+    /**
      * @param HiddenString $password
      * @param string       $salt
      * @param string       $level
@@ -134,8 +146,7 @@ final class KeyFactory
         string $salt,
         string $level = HaliteKeyFactory::INTERACTIVE,
         int $alg = SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
-    ): EncryptionKey
-    {
+    ): EncryptionKey {
         return HaliteKeyFactory::deriveEncryptionKey($password, $salt, $level, $alg);
     }
 
@@ -154,8 +165,7 @@ final class KeyFactory
         string $salt,
         string $level = HaliteKeyFactory::INTERACTIVE,
         int $alg = SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
-    ): EncryptionKey
-    {
+    ): EncryptionKey {
         return $this->deriveEncryptionKey(
             $password,
             $this->saltFactory->derivePepperSalt($salt),
