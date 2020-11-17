@@ -21,6 +21,7 @@
   },
   "require": {
     "php": ">=7.3",
+    "ext-mbstring": "*",
     "paragonie/halite": "^v4.6"
   },
   "require-dev": {
