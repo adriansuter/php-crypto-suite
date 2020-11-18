@@ -14,6 +14,7 @@ use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPStan\Testing\TestCase;
 
+use function base64_decode;
 use function random_bytes;
 
 use const SODIUM_CRYPTO_PWHASH_SALTBYTES;
@@ -22,7 +23,7 @@ class KeyFactoryTest extends TestCase
 {
     private function buildKeyFactory(): KeyFactory
     {
-        $pepper = \base64_decode('aW8/6a+Pld62aD24RnATJA==');
+        $pepper = base64_decode('aW8/6a+Pld62aD24RnATJA==');
         $saltFactory = new SaltFactory($pepper, 99);
         return new KeyFactory($saltFactory);
     }
