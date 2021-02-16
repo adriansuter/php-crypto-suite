@@ -11,7 +11,7 @@ use function random_bytes;
 
 use const SODIUM_CRYPTO_PWHASH_SALTBYTES;
 
-final class SaltFactory
+class SaltFactory
 {
     /**
      * @var string
@@ -68,6 +68,7 @@ final class SaltFactory
      * Derives a pepper salt given a salt.
      *
      * @param string $salt The salt.
+     *
      * @return string The pepper salt (16 bytes).
      */
     public function derivePepperSalt(string $salt): string

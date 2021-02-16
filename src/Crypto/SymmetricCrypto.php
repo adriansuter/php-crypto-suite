@@ -11,7 +11,7 @@ use ParagonIE\Halite\Symmetric\Crypto;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 
-final class SymmetricCrypto extends AbstractCrypto
+class SymmetricCrypto extends AbstractCrypto
 {
     /**
      * @param HiddenString $plaintext

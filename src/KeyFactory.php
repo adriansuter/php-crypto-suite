@@ -18,7 +18,7 @@ use ParagonIE\HiddenString\HiddenString;
 
 use const SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13;
 
-final class KeyFactory
+class KeyFactory
 {
     /**
      * @var SaltFactory

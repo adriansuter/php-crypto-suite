@@ -7,7 +7,7 @@ namespace AdrianSuter\CryptoSuite;
 use InvalidArgumentException;
 use ParagonIE\HiddenString\HiddenString;
 
-final class HiddenStringUtilities
+class HiddenStringUtilities
 {
     /**
      * @param HiddenString $input

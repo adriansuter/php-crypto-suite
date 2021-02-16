@@ -15,7 +15,7 @@ use ParagonIE\Halite\Asymmetric\SignatureSecretKey;
 use ParagonIE\Halite\Halite;
 use ParagonIE\HiddenString\HiddenString;
 
-final class AsymmetricCrypto extends AbstractCrypto
+class AsymmetricCrypto extends AbstractCrypto
 {
     /**
      * @param HiddenString        $plaintext
