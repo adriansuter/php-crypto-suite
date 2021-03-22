@@ -4,7 +4,13 @@ declare(strict_types=1);
 
 namespace AdrianSuter\CryptoSuite\Crypto;
 
-use ParagonIE\Halite\Alerts\HaliteAlert;
+use AdrianSuter\CryptoSuite\Exceptions\CryptoException;
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
+use ParagonIE\Halite\Alerts\InvalidDigestLength;
+use ParagonIE\Halite\Alerts\InvalidKey;
+use ParagonIE\Halite\Alerts\InvalidMessage;
+use ParagonIE\Halite\Alerts\InvalidSignature;
+use ParagonIE\Halite\Alerts\InvalidType;
 use ParagonIE\Halite\Asymmetric\Crypto;
 use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
 use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
@@ -14,6 +20,7 @@ use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\Asymmetric\SignatureSecretKey;
 use ParagonIE\Halite\Halite;
 use ParagonIE\HiddenString\HiddenString;
+use SodiumException;
 
 class AsymmetricCrypto extends AbstractCrypto
 {
@@ -25,7 +32,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return string
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function encrypt(
         HiddenString $plaintext,
@@ -33,7 +40,13 @@ class AsymmetricCrypto extends AbstractCrypto
         EncryptionPublicKey $theirPublicKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
-        return Crypto::encrypt($plaintext, $ourPrivateKey, $theirPublicKey, $encoding);
+        try {
+            return Crypto::encrypt($plaintext, $ourPrivateKey, $theirPublicKey, $encoding);
+        } catch (CannotPerformOperation | InvalidDigestLength | InvalidMessage | InvalidKey | InvalidType  $e) {
+            throw new CryptoException($e);
+        } catch (SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -45,7 +58,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return string
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function encryptFixedSize(
         HiddenString $plaintext,
@@ -70,7 +83,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return string
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function signAndEncrypt(
         HiddenString $message,
@@ -78,7 +91,13 @@ class AsymmetricCrypto extends AbstractCrypto
         PublicKey $recipientPublicKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
-        return Crypto::signAndEncrypt($message, $secretKey, $recipientPublicKey, $encoding);
+        try {
+            return Crypto::signAndEncrypt($message, $secretKey, $recipientPublicKey, $encoding);
+        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidType  $e) {
+            throw new CryptoException($e);
+        } catch (SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -90,7 +109,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return string
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function signAndEncryptFixedSize(
         HiddenString $message,
@@ -115,7 +134,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return HiddenString
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function decrypt(
         string $ciphertext,
@@ -123,7 +142,13 @@ class AsymmetricCrypto extends AbstractCrypto
         EncryptionPublicKey $theirPublicKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
-        return Crypto::decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding);
+        try {
+            return Crypto::decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding);
+        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidSignature $e) {
+            throw new CryptoException($e);
+        } catch (InvalidType | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -134,7 +159,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return HiddenString
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function decryptFixedSize(
         string $ciphertext,
@@ -155,7 +180,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return HiddenString
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function verifyAndDecrypt(
         string $ciphertext,
@@ -163,12 +188,18 @@ class AsymmetricCrypto extends AbstractCrypto
         SecretKey $givenSecretKey,
         $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
-        return Crypto::verifyAndDecrypt(
-            $ciphertext,
-            $senderPublicKey,
-            $givenSecretKey,
-            $encoding
-        );
+        try {
+            return Crypto::verifyAndDecrypt(
+                $ciphertext,
+                $senderPublicKey,
+                $givenSecretKey,
+                $encoding
+            );
+        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidSignature  $e) {
+            throw new CryptoException($e);
+        } catch (InvalidType | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -179,7 +210,7 @@ class AsymmetricCrypto extends AbstractCrypto
      *
      * @return HiddenString
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function verifyAndDecryptFixedSize(
         string $ciphertext,

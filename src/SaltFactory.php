@@ -16,17 +16,17 @@ class SaltFactory
     /**
      * @var string
      */
-    private $pepper;
+    protected $pepper;
 
     /**
      * @var int
      */
-    private $hashIterations;
+    protected $hashIterations;
 
     /**
      * @var string
      */
-    private $hashAlgorithm;
+    protected $hashAlgorithm;
 
     /**
      * @param string $pepper
@@ -44,6 +44,7 @@ class SaltFactory
      * Generates a new salt.
      *
      * @return string The salt (16 bytes).
+     *
      * @throws Exception
      */
     public function generateSalt(): string
@@ -55,6 +56,7 @@ class SaltFactory
      * Generates a new pepper salt.
      *
      * @return string The pepper salt (16 bytes).
+     *
      * @throws Exception
      */
     public function generatePepperSalt(): string

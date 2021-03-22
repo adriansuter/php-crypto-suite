@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AdrianSuter\CryptoSuite;
 
 use Exception;
-use ParagonIE\Halite\Alerts\HaliteAlert;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 
@@ -32,7 +31,8 @@ class PasswordUtilities
      * @param string       $salt
      *
      * @return EncryptionKey
-     * @throws HaliteAlert
+     *
+     * @throws Exceptions\CryptoException
      */
     public function derivePasswordKey(HiddenString $password, string $salt): EncryptionKey
     {
@@ -44,6 +44,7 @@ class PasswordUtilities
      * @param string $keyspace
      *
      * @return HiddenString
+     *
      * @throws Exception
      */
     public function generatePassword(

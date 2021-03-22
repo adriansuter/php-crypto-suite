@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace AdrianSuter\CryptoSuite;
 
-use ParagonIE\Halite\Alerts\HaliteAlert;
+use AdrianSuter\CryptoSuite\Exceptions\CryptoException;
+use ParagonIE\Halite\Alerts\CannotPerformOperation;
 use ParagonIE\Halite\Alerts\InvalidKey;
+use ParagonIE\Halite\Alerts\InvalidSalt;
+use ParagonIE\Halite\Alerts\InvalidType;
 use ParagonIE\Halite\Asymmetric\SignaturePublicKey;
 use ParagonIE\Halite\Asymmetric\SignatureSecretKey;
 use ParagonIE\Halite\EncryptionKeyPair;
@@ -13,8 +16,10 @@ use ParagonIE\Halite\Key;
 use ParagonIE\Halite\KeyFactory as HaliteKeyFactory;
 use ParagonIE\Halite\KeyPair;
 use ParagonIE\Halite\SignatureKeyPair;
+use ParagonIE\Halite\Symmetric\AuthenticationKey;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
+use SodiumException;
 
 use const SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13;
 
@@ -23,7 +28,7 @@ class KeyFactory
     /**
      * @var SaltFactory
      */
-    private $saltFactory;
+    protected $saltFactory;
 
     /**
      * @param SaltFactory $saltFactory
@@ -44,31 +49,57 @@ class KeyFactory
     /**
      * @return EncryptionKey
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function generateEncryptionKey(): EncryptionKey
     {
-        return HaliteKeyFactory::generateEncryptionKey();
+        try {
+            return HaliteKeyFactory::generateEncryptionKey();
+        } catch (CannotPerformOperation | InvalidKey $e) {
+            throw new CryptoException($e);
+        }
+    }
+
+    /**
+     * @return AuthenticationKey
+     *
+     * @throws CryptoException
+     */
+    public function generateAuthenticationKey(): AuthenticationKey
+    {
+        try {
+            return HaliteKeyFactory::generateAuthenticationKey();
+        } catch (CannotPerformOperation | InvalidKey $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
      * @return EncryptionKeyPair
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function generateEncryptionKeyPair(): EncryptionKeyPair
     {
-        return HaliteKeyFactory::generateEncryptionKeyPair();
+        try {
+            return HaliteKeyFactory::generateEncryptionKeyPair();
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
      * @return SignatureKeyPair
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function generateSignatureKeyPair(): SignatureKeyPair
     {
-        return HaliteKeyFactory::generateSignatureKeyPair();
+        try {
+            return HaliteKeyFactory::generateSignatureKeyPair();
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -76,11 +107,15 @@ class KeyFactory
      *
      * @return HiddenString
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function export($key): HiddenString
     {
-        return HaliteKeyFactory::export($key);
+        try {
+            return HaliteKeyFactory::export($key);
+        } catch (CannotPerformOperation | InvalidType | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -88,11 +123,31 @@ class KeyFactory
      *
      * @return EncryptionKey
      *
-     * @throws InvalidKey
+     * @throws CryptoException
      */
     public function importEncryptionKey(HiddenString $keyData): EncryptionKey
     {
-        return HaliteKeyFactory::importEncryptionKey($keyData);
+        try {
+            return HaliteKeyFactory::importEncryptionKey($keyData);
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
+    }
+
+    /**
+     * @param HiddenString $keyData
+     *
+     * @return AuthenticationKey
+     *
+     * @throws CryptoException
+     */
+    public function importAuthenticationKey(HiddenString $keyData): AuthenticationKey
+    {
+        try {
+            return HaliteKeyFactory::importAuthenticationKey($keyData);
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -100,11 +155,15 @@ class KeyFactory
      *
      * @return SignaturePublicKey
      *
-     * @throws InvalidKey
+     * @throws CryptoException
      */
     public function importSignaturePublicKey(HiddenString $keyData): SignaturePublicKey
     {
-        return HaliteKeyFactory::importSignaturePublicKey($keyData);
+        try {
+            return HaliteKeyFactory::importSignaturePublicKey($keyData);
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -112,11 +171,15 @@ class KeyFactory
      *
      * @return SignatureSecretKey
      *
-     * @throws InvalidKey
+     * @throws CryptoException
      */
     public function importSignatureSecretKey(HiddenString $keyData): SignatureSecretKey
     {
-        return HaliteKeyFactory::importSignatureSecretKey($keyData);
+        try {
+            return HaliteKeyFactory::importSignatureSecretKey($keyData);
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -124,11 +187,15 @@ class KeyFactory
      *
      * @return SignatureKeyPair
      *
-     * @throws InvalidKey
+     * @throws CryptoException
      */
     public function importSignatureKeyPair(HiddenString $keyData): SignatureKeyPair
     {
-        return HaliteKeyFactory::importSignatureKeyPair($keyData);
+        try {
+            return HaliteKeyFactory::importSignatureKeyPair($keyData);
+        } catch (InvalidKey | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -139,7 +206,7 @@ class KeyFactory
      *
      * @return EncryptionKey
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function deriveEncryptionKey(
         HiddenString $password,
@@ -147,7 +214,11 @@ class KeyFactory
         string $level = HaliteKeyFactory::INTERACTIVE,
         int $alg = SODIUM_CRYPTO_PWHASH_ALG_ARGON2ID13
     ): EncryptionKey {
-        return HaliteKeyFactory::deriveEncryptionKey($password, $salt, $level, $alg);
+        try {
+            return HaliteKeyFactory::deriveEncryptionKey($password, $salt, $level, $alg);
+        } catch (InvalidKey | InvalidSalt | InvalidType | SodiumException $e) {
+            throw new CryptoException($e);
+        }
     }
 
     /**
@@ -158,7 +229,7 @@ class KeyFactory
      *
      * @return EncryptionKey
      *
-     * @throws HaliteAlert
+     * @throws CryptoException
      */
     public function derivePepperedEncryptionKey(
         HiddenString $password,
