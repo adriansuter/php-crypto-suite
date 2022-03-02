@@ -12,7 +12,7 @@ use ParagonIE\Halite\EncryptionKeyPair;
 use ParagonIE\Halite\SignatureKeyPair;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
 
 use function base64_decode;
 use function random_bytes;

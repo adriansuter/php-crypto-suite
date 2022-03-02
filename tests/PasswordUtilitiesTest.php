@@ -8,7 +8,7 @@ use AdrianSuter\CryptoSuite\KeyFactory;
 use AdrianSuter\CryptoSuite\PasswordUtilities;
 use AdrianSuter\CryptoSuite\SaltFactory;
 use ParagonIE\HiddenString\HiddenString;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
 
 use function base64_decode;
 

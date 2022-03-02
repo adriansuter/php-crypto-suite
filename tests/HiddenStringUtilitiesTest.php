@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class HiddenStringUtilitiesTest extends TestCase
 {
-    public function testPad()
+    public function testPad(): void
     {
         $h = new HiddenStringUtilities();
         $this->assertEquals(
@@ -19,7 +19,7 @@ class HiddenStringUtilitiesTest extends TestCase
         );
     }
 
-    public function testPadWithTrailingDot()
+    public function testPadWithTrailingDot(): void
     {
         $h = new HiddenStringUtilities();
         $this->assertEquals(
@@ -28,7 +28,7 @@ class HiddenStringUtilitiesTest extends TestCase
         );
     }
 
-    public function testPadSizeTooSmall()
+    public function testPadSizeTooSmall(): void
     {
         $h = new HiddenStringUtilities();
 
@@ -37,7 +37,7 @@ class HiddenStringUtilitiesTest extends TestCase
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string[]>
      */
     public function trimDataProvider(): array
     {
@@ -54,16 +54,16 @@ class HiddenStringUtilitiesTest extends TestCase
      * @dataProvider trimDataProvider
      * @noinspection PhpDocSignatureInspection
      */
-    public function testTrim(string $input, string $expected)
+    public function testTrim(string $input, string $expected): void
     {
         $hiddenStringUtilities = new HiddenStringUtilities();
         $this->assertEquals(
             $expected,
-            $hiddenStringUtilities->trim(new HiddenString($input))
+            $hiddenStringUtilities->trim(new HiddenString($input))->getString()
         );
     }
 
-    public function testTrimInvalidPadChar()
+    public function testTrimInvalidPadChar(): void
     {
         $hiddenStringUtilities = new HiddenStringUtilities();
         $this->expectException(\InvalidArgumentException::class);

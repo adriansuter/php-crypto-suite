@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class SaltFactoryTest extends TestCase
 {
-    private function buildSaltFactory()
+    private function buildSaltFactory(): SaltFactory
     {
         return new SaltFactory('1234567890abcdef', 15);
     }
