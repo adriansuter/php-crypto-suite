@@ -20,9 +20,9 @@
     }
   },
   "require": {
-    "php": ">=7.3",
+    "php": "^8",
     "ext-mbstring": "*",
-    "paragonie/halite": "^v4.6"
+    "paragonie/halite": "^5.1"
   },
   "require-dev": {
     "adriansuter/php-autoload-override": "^1.2",
