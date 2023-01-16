@@ -11,6 +11,7 @@ use AdrianSuter\CryptoSuite\SaltFactory;
 use ParagonIE\Halite\EncryptionKeyPair;
 use ParagonIE\Halite\KeyFactory as HaliteKeyFactory;
 use ParagonIE\Halite\SignatureKeyPair;
+use ParagonIE\Halite\Symmetric\AuthenticationKey;
 use ParagonIE\Halite\Symmetric\EncryptionKey;
 use ParagonIE\HiddenString\HiddenString;
 use PHPUnit\Framework\TestCase;
@@ -40,6 +41,12 @@ class KeyFactoryTest extends TestCase
     {
         $keyFactory = $this->buildKeyFactory();
         $this->assertInstanceOf(EncryptionKey::class, $keyFactory->generateEncryptionKey());
+    }
+
+    public function testGenerateAuthenticationKey(): void
+    {
+        $keyFactory = $this->buildKeyFactory();
+        $this->assertInstanceOf(AuthenticationKey::class, $keyFactory->generateAuthenticationKey());
     }
 
     public function testGenerateEncryptionKeyPair(): void
@@ -137,20 +144,24 @@ class KeyFactoryTest extends TestCase
         $salt = base64_decode('ERbWegDt+fCUzcO7YEMq2Q==');
 
         $encryptionKey = $keyFactory->deriveEncryptionKey(new HiddenString('foo'), $salt);
-        $expectedEncryptionKey = HaliteKeyFactory::importEncryptionKey(new HiddenString(
-            '31400400'
-            . 'a72e95a39a7cd45cec82e6848edd1ce467aad3447b7e4bf51bc24ecfad2b34e5'
-            . 'bedcb352b77a0c065e4110d91d9e48f7462ff2e3632aa8d47214c3ad606722df'
-            . 'd963cb5c683a7aa0e26344ddf22e6559e11e82973ff00c37b2d1ee0e7282a5f6'
-        ));
+        $expectedEncryptionKey = HaliteKeyFactory::importEncryptionKey(
+            new HiddenString(
+                '31400400'
+                . 'a72e95a39a7cd45cec82e6848edd1ce467aad3447b7e4bf51bc24ecfad2b34e5'
+                . 'bedcb352b77a0c065e4110d91d9e48f7462ff2e3632aa8d47214c3ad606722df'
+                . 'd963cb5c683a7aa0e26344ddf22e6559e11e82973ff00c37b2d1ee0e7282a5f6'
+            )
+        );
         $this->assertEquals($expectedEncryptionKey, $encryptionKey);
 
-        $expectedEncryptionKeyV5 = HaliteKeyFactory::importEncryptionKey(new HiddenString(
-            '31400500'
-            . 'a72e95a39a7cd45cec82e6848edd1ce467aad3447b7e4bf51bc24ecfad2b34e5'
-            . '4d29cc0602ef50637716ac84b6ae86266f2bc00f5036d91a079b2e2117c128b9'
-            . '7d5a2e0d7fd3fe8745fc106da44ae175c190fe230c1dc688f85fd351091123b1'
-        ));
+        $expectedEncryptionKeyV5 = HaliteKeyFactory::importEncryptionKey(
+            new HiddenString(
+                '31400500'
+                . 'a72e95a39a7cd45cec82e6848edd1ce467aad3447b7e4bf51bc24ecfad2b34e5'
+                . '4d29cc0602ef50637716ac84b6ae86266f2bc00f5036d91a079b2e2117c128b9'
+                . '7d5a2e0d7fd3fe8745fc106da44ae175c190fe230c1dc688f85fd351091123b1'
+            )
+        );
         $this->assertEquals($expectedEncryptionKeyV5, $encryptionKey);
     }
 
@@ -160,20 +171,24 @@ class KeyFactoryTest extends TestCase
         $salt = base64_decode('ERbWegDt+fCUzcO7YEMq2Q==');
 
         $encryptionKey = $keyFactory->derivePepperedEncryptionKey(new HiddenString('foo'), $salt);
-        $expectedEncryptionKey = HaliteKeyFactory::importEncryptionKey(new HiddenString(
-            '31400400'
-            . '8298e78d2ad2376a93fe42cb1e8853b085bdf3e5a24a990d07b09fd6b3c7eaf9'
-            . 'f6832617d69c63329ba5792a417e54f8523ede0ef6b596ea46c7ae8d9d0249d0'
-            . 'b43bad7ab478de700ced226283e8b7c436eebd9a3b7698dd9c5e7696a792229c'
-        ));
+        $expectedEncryptionKey = HaliteKeyFactory::importEncryptionKey(
+            new HiddenString(
+                '31400400'
+                . '8298e78d2ad2376a93fe42cb1e8853b085bdf3e5a24a990d07b09fd6b3c7eaf9'
+                . 'f6832617d69c63329ba5792a417e54f8523ede0ef6b596ea46c7ae8d9d0249d0'
+                . 'b43bad7ab478de700ced226283e8b7c436eebd9a3b7698dd9c5e7696a792229c'
+            )
+        );
         $this->assertEquals($expectedEncryptionKey, $encryptionKey);
 
-        $expectedEncryptionKeyV5 = HaliteKeyFactory::importEncryptionKey(new HiddenString(
-            '31400500'
-            . '8298e78d2ad2376a93fe42cb1e8853b085bdf3e5a24a990d07b09fd6b3c7eaf9'
-            . '21e9c8d10d79bfe34a7a122ac37b7582ab7e1ba3addec7e43095607e59895f06'
-            . '6dfcf98ba3f7de97e36beab0f4cf4264c6b5792d72fb59b4952b1717f2f0944a'
-        ));
+        $expectedEncryptionKeyV5 = HaliteKeyFactory::importEncryptionKey(
+            new HiddenString(
+                '31400500'
+                . '8298e78d2ad2376a93fe42cb1e8853b085bdf3e5a24a990d07b09fd6b3c7eaf9'
+                . '21e9c8d10d79bfe34a7a122ac37b7582ab7e1ba3addec7e43095607e59895f06'
+                . '6dfcf98ba3f7de97e36beab0f4cf4264c6b5792d72fb59b4952b1717f2f0944a'
+            )
+        );
         $this->assertEquals($expectedEncryptionKeyV5, $encryptionKey);
     }
 }

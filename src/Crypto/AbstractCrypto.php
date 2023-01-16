@@ -11,7 +11,7 @@ abstract class AbstractCrypto
     /**
      * @var HiddenStringUtilities
      */
-    protected $hiddenStringUtilities;
+    protected HiddenStringUtilities $hiddenStringUtilities;
 
     /**
      * @param HiddenStringUtilities $hiddenStringUtilities

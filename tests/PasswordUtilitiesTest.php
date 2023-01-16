@@ -43,4 +43,12 @@ class PasswordUtilitiesTest extends TestCase
         $password = $passwordUtilities->generatePassword(16);
         $this->assertEquals(16, strlen($password->getString()));
     }
+
+    public function testGeneratePasswordWithInvalidKeyspace(): void
+    {
+        $passwordUtilities = $this->buildPasswordUtilities();
+
+        $this->expectException(\Exception::class);
+        $passwordUtilities->generatePassword(16, '');
+    }
 }

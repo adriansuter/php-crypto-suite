@@ -28,7 +28,7 @@ class KeyFactory
     /**
      * @var SaltFactory
      */
-    protected $saltFactory;
+    protected SaltFactory $saltFactory;
 
     /**
      * @param SaltFactory $saltFactory
@@ -97,7 +97,7 @@ class KeyFactory
     {
         try {
             return HaliteKeyFactory::generateSignatureKeyPair();
-        } catch (InvalidKey | SodiumException $e) {
+        } catch (CannotPerformOperation | InvalidKey | SodiumException $e) {
             throw new CryptoException($e);
         }
     }
@@ -109,7 +109,7 @@ class KeyFactory
      *
      * @throws CryptoException
      */
-    public function export($key): HiddenString
+    public function export(Key | KeyPair $key): HiddenString
     {
         try {
             return HaliteKeyFactory::export($key);
@@ -193,16 +193,16 @@ class KeyFactory
     {
         try {
             return HaliteKeyFactory::importSignatureKeyPair($keyData);
-        } catch (InvalidKey | SodiumException $e) {
+        } catch (CannotPerformOperation | InvalidKey | SodiumException $e) {
             throw new CryptoException($e);
         }
     }
 
     /**
      * @param HiddenString $password
-     * @param string       $salt
-     * @param string       $level
-     * @param int          $alg
+     * @param string $salt
+     * @param string $level
+     * @param int $alg
      *
      * @return EncryptionKey
      *
@@ -223,9 +223,9 @@ class KeyFactory
 
     /**
      * @param HiddenString $password
-     * @param string       $salt
-     * @param string       $level
-     * @param int          $alg
+     * @param string $salt
+     * @param string $level
+     * @param int $alg
      *
      * @return EncryptionKey
      *
