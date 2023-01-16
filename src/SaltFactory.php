@@ -16,21 +16,21 @@ class SaltFactory
     /**
      * @var string
      */
-    protected $pepper;
+    protected string $pepper;
 
     /**
      * @var int
      */
-    protected $hashIterations;
+    protected int $hashIterations;
 
     /**
      * @var string
      */
-    protected $hashAlgorithm;
+    protected string $hashAlgorithm;
 
     /**
      * @param string $pepper
-     * @param int    $hashIterations
+     * @param int $hashIterations
      * @param string $hashAlgorithm
      */
     public function __construct(string $pepper, int $hashIterations, string $hashAlgorithm = 'sha256')

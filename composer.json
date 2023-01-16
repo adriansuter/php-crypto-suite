@@ -20,7 +20,7 @@
     }
   },
   "require": {
-    "php": "^8",
+    "php": "^8.1",
     "ext-mbstring": "*",
     "paragonie/halite": "^5.1"
   },

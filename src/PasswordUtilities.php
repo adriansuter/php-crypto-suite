@@ -16,7 +16,7 @@ class PasswordUtilities
     /**
      * @var KeyFactory
      */
-    protected $keyFactory;
+    protected KeyFactory $keyFactory;
 
     /**
      * @param KeyFactory $keyFactory
@@ -28,7 +28,7 @@ class PasswordUtilities
 
     /**
      * @param HiddenString $password
-     * @param string       $salt
+     * @param string $salt
      *
      * @return EncryptionKey
      *
@@ -40,7 +40,7 @@ class PasswordUtilities
     }
 
     /**
-     * @param int    $length
+     * @param int $length
      * @param string $keyspace
      *
      * @return HiddenString

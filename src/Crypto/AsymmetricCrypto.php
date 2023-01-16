@@ -5,12 +5,7 @@ declare(strict_types=1);
 namespace AdrianSuter\CryptoSuite\Crypto;
 
 use AdrianSuter\CryptoSuite\Exceptions\CryptoException;
-use ParagonIE\Halite\Alerts\CannotPerformOperation;
-use ParagonIE\Halite\Alerts\InvalidDigestLength;
-use ParagonIE\Halite\Alerts\InvalidKey;
-use ParagonIE\Halite\Alerts\InvalidMessage;
-use ParagonIE\Halite\Alerts\InvalidSignature;
-use ParagonIE\Halite\Alerts\InvalidType;
+use ParagonIE\Halite\Alerts\HaliteAlertInterface;
 use ParagonIE\Halite\Asymmetric\Crypto;
 use ParagonIE\Halite\Asymmetric\EncryptionPublicKey;
 use ParagonIE\Halite\Asymmetric\EncryptionSecretKey;
@@ -25,10 +20,10 @@ use SodiumException;
 class AsymmetricCrypto extends AbstractCrypto
 {
     /**
-     * @param HiddenString        $plaintext
+     * @param HiddenString $plaintext
      * @param EncryptionSecretKey $ourPrivateKey
      * @param EncryptionPublicKey $theirPublicKey
-     * @param string              $encoding
+     * @param string $encoding
      *
      * @return string
      *
@@ -38,23 +33,21 @@ class AsymmetricCrypto extends AbstractCrypto
         HiddenString $plaintext,
         EncryptionSecretKey $ourPrivateKey,
         EncryptionPublicKey $theirPublicKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
         try {
             return Crypto::encrypt($plaintext, $ourPrivateKey, $theirPublicKey, $encoding);
-        } catch (CannotPerformOperation | InvalidDigestLength | InvalidMessage | InvalidKey | InvalidType  $e) {
-            throw new CryptoException($e);
-        } catch (SodiumException $e) {
+        } catch (HaliteAlertInterface | SodiumException  $e) {
             throw new CryptoException($e);
         }
     }
 
     /**
-     * @param HiddenString        $plaintext
+     * @param HiddenString $plaintext
      * @param EncryptionSecretKey $ourPrivateKey
      * @param EncryptionPublicKey $theirPublicKey
-     * @param int                 $size
-     * @param string              $encoding
+     * @param int $size
+     * @param string $encoding
      *
      * @return string
      *
@@ -65,7 +58,7 @@ class AsymmetricCrypto extends AbstractCrypto
         EncryptionSecretKey $ourPrivateKey,
         EncryptionPublicKey $theirPublicKey,
         int $size,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
         return $this->encrypt(
             $this->hiddenStringUtilities->pad($plaintext, $size),
@@ -76,10 +69,10 @@ class AsymmetricCrypto extends AbstractCrypto
     }
 
     /**
-     * @param HiddenString       $message
+     * @param HiddenString $message
      * @param SignatureSecretKey $secretKey
-     * @param PublicKey          $recipientPublicKey
-     * @param string             $encoding
+     * @param PublicKey $recipientPublicKey
+     * @param string $encoding
      *
      * @return string
      *
@@ -89,23 +82,21 @@ class AsymmetricCrypto extends AbstractCrypto
         HiddenString $message,
         SignatureSecretKey $secretKey,
         PublicKey $recipientPublicKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
         try {
             return Crypto::signAndEncrypt($message, $secretKey, $recipientPublicKey, $encoding);
-        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidType  $e) {
-            throw new CryptoException($e);
-        } catch (SodiumException $e) {
+        } catch (HaliteAlertInterface | SodiumException  $e) {
             throw new CryptoException($e);
         }
     }
 
     /**
-     * @param HiddenString       $message
+     * @param HiddenString $message
      * @param SignatureSecretKey $secretKey
-     * @param PublicKey          $recipientPublicKey
-     * @param int                $size
-     * @param string             $encoding
+     * @param PublicKey $recipientPublicKey
+     * @param int $size
+     * @param string $encoding
      *
      * @return string
      *
@@ -116,7 +107,7 @@ class AsymmetricCrypto extends AbstractCrypto
         SignatureSecretKey $secretKey,
         PublicKey $recipientPublicKey,
         int $size,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): string {
         return $this->signAndEncrypt(
             $this->hiddenStringUtilities->pad($message, $size),
@@ -127,10 +118,10 @@ class AsymmetricCrypto extends AbstractCrypto
     }
 
     /**
-     * @param string              $ciphertext
+     * @param string $ciphertext
      * @param EncryptionSecretKey $ourPrivateKey
      * @param EncryptionPublicKey $theirPublicKey
-     * @param string              $encoding
+     * @param string $encoding
      *
      * @return HiddenString
      *
@@ -140,22 +131,20 @@ class AsymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         EncryptionSecretKey $ourPrivateKey,
         EncryptionPublicKey $theirPublicKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
         try {
             return Crypto::decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding);
-        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidSignature $e) {
-            throw new CryptoException($e);
-        } catch (InvalidType | SodiumException $e) {
+        } catch (HaliteAlertInterface | SodiumException $e) {
             throw new CryptoException($e);
         }
     }
 
     /**
-     * @param string              $ciphertext
+     * @param string $ciphertext
      * @param EncryptionSecretKey $ourPrivateKey
      * @param EncryptionPublicKey $theirPublicKey
-     * @param string              $encoding
+     * @param string $encoding
      *
      * @return HiddenString
      *
@@ -165,7 +154,7 @@ class AsymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         EncryptionSecretKey $ourPrivateKey,
         EncryptionPublicKey $theirPublicKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
         return $this->hiddenStringUtilities->trim(
             $this->decrypt($ciphertext, $ourPrivateKey, $theirPublicKey, $encoding)
@@ -173,10 +162,10 @@ class AsymmetricCrypto extends AbstractCrypto
     }
 
     /**
-     * @param string             $ciphertext
+     * @param string $ciphertext
      * @param SignaturePublicKey $senderPublicKey
-     * @param SecretKey          $givenSecretKey
-     * @param string             $encoding
+     * @param SecretKey $givenSecretKey
+     * @param string $encoding
      *
      * @return HiddenString
      *
@@ -186,7 +175,7 @@ class AsymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         SignaturePublicKey $senderPublicKey,
         SecretKey $givenSecretKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
         try {
             return Crypto::verifyAndDecrypt(
@@ -195,18 +184,16 @@ class AsymmetricCrypto extends AbstractCrypto
                 $givenSecretKey,
                 $encoding
             );
-        } catch (CannotPerformOperation | InvalidDigestLength | InvalidKey | InvalidMessage | InvalidSignature  $e) {
-            throw new CryptoException($e);
-        } catch (InvalidType | SodiumException $e) {
+        } catch (HaliteAlertInterface | SodiumException  $e) {
             throw new CryptoException($e);
         }
     }
 
     /**
-     * @param string             $ciphertext
+     * @param string $ciphertext
      * @param SignaturePublicKey $senderPublicKey
-     * @param SecretKey          $givenSecretKey
-     * @param string             $encoding
+     * @param SecretKey $givenSecretKey
+     * @param string $encoding
      *
      * @return HiddenString
      *
@@ -216,7 +203,7 @@ class AsymmetricCrypto extends AbstractCrypto
         string $ciphertext,
         SignaturePublicKey $senderPublicKey,
         SecretKey $givenSecretKey,
-        $encoding = Halite::ENCODE_BASE64URLSAFE
+        string $encoding = Halite::ENCODE_BASE64URLSAFE
     ): HiddenString {
         return $this->hiddenStringUtilities->trim(
             $this->verifyAndDecrypt($ciphertext, $senderPublicKey, $givenSecretKey, $encoding)
